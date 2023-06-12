@@ -6,6 +6,12 @@
     background-color: #FAFAFA;
     height: 300px;
     margin: 0 100px;
+    column-gap: 139px;
+}
+
+.container-button{
+    padding-top: 114px;
+    order: 2;
 }
 
 .contact_button {
@@ -18,7 +24,7 @@
     border: none;
     background-color: #901C1C;
     border-radius: 5px;
-    cursor: pointer;
+    cursor: pointer; 
 }
 
 .modal {
