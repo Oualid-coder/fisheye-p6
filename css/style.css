@@ -266,3 +266,8 @@ color: #525252;
   .error-message{
     color: red;
   }
+
+  .select-box-container select.open {
+    background-color: #DB8876;
+  }
+  

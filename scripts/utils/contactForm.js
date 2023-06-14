@@ -53,9 +53,9 @@ function displayModal() {
   
     // Fonction pour valider le format de l'adresse e-mail
     function validateEmail(email) {
-      // Logique de validation de l'adresse e-mail (par exemple, à l'aide d'expressions régulières)
+
       // Renvoyer true si l'adresse e-mail est valide, false sinon
-      // Vous pouvez personnaliser la logique de validation de l'e-mail en fonction de vos besoins
+
       const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
       return emailRegex.test(email);
     }
@@ -90,3 +90,25 @@ function displayModal() {
   }
   
 
+  const form = modal.querySelector("form");
+  const formElements = form.querySelectorAll("input, textarea, button");
+  
+  form.addEventListener("keydown", function(event) {
+    if (event.key === "Tab") {
+      const focusableElements = Array.from(formElements).filter(element => !element.disabled);
+      const currentIndex = focusableElements.findIndex(element => document.activeElement === element);
+  
+      if (event.shiftKey) {
+        // Déplacer le focus vers l'élément précédent dans le formulaire
+        const previousIndex = currentIndex > 0 ? currentIndex - 1 : focusableElements.length - 1;
+        focusableElements[previousIndex].focus();
+        event.preventDefault();
+      } else {
+        // Déplacer le focus vers l'élément suivant dans le formulaire
+        const nextIndex = currentIndex < focusableElements.length - 1 ? currentIndex + 1 : 0;
+        focusableElements[nextIndex].focus();
+        event.preventDefault();
+      }
+    }
+  });
+  

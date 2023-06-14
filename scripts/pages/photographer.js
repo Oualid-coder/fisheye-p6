@@ -220,23 +220,25 @@ async function getPhotographerById(id) {
             incrementLikes(heart, likes);
             const totalLikesElement = document.querySelector('.likes-bottom-page');
             const img = heart.querySelector('.blackheart');
-        
+          
             if (!img) {
               const newImg = document.createElement('img');
               newImg.classList.add('blackheart');
               newImg.setAttribute('src', './assets/photographers/blackheart.png');
               newImg.setAttribute('alt', 'Coeur noir');
-              heart.appendChild(newImg);
+              const totalLikes = parseInt(totalLikesElement.textContent);
+              totalLikesElement.textContent = (totalLikes + 1).toString();
+              totalLikesElement.appendChild(newImg);
+            } else {
+              img.style.display = 'inline-block';
             }
-        
-            let totalLikes = parseInt(totalLikesElement.textContent);
-            totalLikes += 1;
-            totalLikesElement.textContent = totalLikes.toString();
-            heart.dataset.hasLiked = 'true'; // Set the attribute to indicate that the like has been counted
-            console.log(totalLikes);
+          
+            heart.dataset.hasLiked = 'true';
           }
-        
-             });
+          
+          
+    
+       });
     });
   }
   
