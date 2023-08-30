@@ -28,6 +28,8 @@ async function getPhotographerById(id) {
     
   }
 
+
+
   async function tri(photographerData) {
     const sectionTri = document.querySelector(".tri-option");
   
@@ -86,7 +88,7 @@ async function getPhotographerById(id) {
       // Effectuer le tri des données
       const sortedData = sortData(dataArray, defaultSortBy);
   
-      // Afficher les données triées (par exemple, mettre à jour l'affichage des photos)
+      // Afficher les données triées 
       displayPhotoSorted(sortedData);
     } catch (error) {
       console.error("Erreur lors de l'analyse du JSON :", error);
@@ -95,9 +97,9 @@ async function getPhotographerById(id) {
   
   
   
-  // Fonction de tri par date
+  // Fonction de tri 
   function sortData(data, sortBy) {
-    const values = [...data]; // Crée une copie du tableau original pour éviter de modifier les données d'origine
+    const values = [...data]; // Crée une copie du tableau original 
   
     switch (sortBy) {
       case "popularity":
@@ -118,15 +120,13 @@ async function getPhotographerById(id) {
         });
         break;
       default:
-        // Tri par défaut si aucun critère valide n'est spécifié
+        
         break;
     }
   
     return values;
   }
   
-
-
 
   async function displayLikesAndPrices(photographerData) {
     const sectionPricesAndLikes = document.querySelector(".price-likes-fixed");
@@ -136,7 +136,6 @@ async function getPhotographerById(id) {
     const pricesAndLikesElement = getPricesAndLikes();
   
     sectionPricesAndLikes.appendChild(pricesAndLikesElement);
-
 
   }
 
@@ -164,25 +163,35 @@ async function getPhotographerById(id) {
   }
   
   
-  
   async function displayPhoto(photographerData) {
     const mediaContainer = document.querySelector(".photograph-photos");
-    console.log(photographerData.media)
+    
     photographerData.media.forEach((media) => {
       const mediaElement = photos(media);
       const createPhotos = mediaElement.getPhotoDOM();
       mediaContainer.appendChild(createPhotos);
   
       // Ajouter un gestionnaire d'événement de clic pour chaque média individuel
-      const img = createPhotos.querySelector('img');
-      img.addEventListener('click', function () { 
-        showLightbox(media.image,photographerData);
+      //const picturesContainer = document.querySelector('img');
+      const picturesContainer = document.querySelector('img');
+
+      picturesContainer.addEventListener('click', function(e) {
+        const target = e.target;
+      
+        // Vérifier si l'élément cliqué est une image ou une vidéo
+        const isImage = target.tagName === 'IMG';
+        const isVideo = target.tagName === 'VIDEO';
+      
+        if (isImage || isVideo) {
+          const mediaImage = isImage ? target.getAttribute('src') : null;
+          const mediaVideo = isVideo ? target.getAttribute('src') : null;
+          showLightbox(mediaImage, mediaVideo, photographerData);
+        }
       });
 
         // Sélectionner l'élément pour afficher le nombre de likes
     const likes = createPhotos.querySelector('.numbers');
     
-
     // Ajouter un gestionnaire d'événement de clic pour incrémenter les likes
     const heart = createPhotos.querySelector('.heart');
    
@@ -191,6 +200,7 @@ async function getPhotographerById(id) {
         });
     });
   }
+
 
   function displayPhotoSorted(sortedData) {
     const galleryContainer = document.querySelector(".photograph-photos");
@@ -205,8 +215,8 @@ async function getPhotographerById(id) {
            // Ajouter un gestionnaire d'événement de clic pour chaque média individuel
            const img = createPhotos.querySelector('img');
            img.addEventListener('click', function () {
-             showLightbox(photo.image,sortedData);
-           });
+             showLightbox(photo.image,photo.video,sortedData);
+           });          
      
              // Sélectionner l'élément pour afficher le nombre de likes
          const likes = createPhotos.querySelector('.numbers');
@@ -232,20 +242,33 @@ async function getPhotographerById(id) {
             } else {
               img.style.display = 'inline-block';
             }
-          
+
             heart.dataset.hasLiked = 'true';
           }
-          
-          
-    
        });
     });
   }
   
   
-  function showLightbox(imageUrl, sortedData) {
-    const baseUrl = window.location.origin + '/assets/photographers/';
-    const fullImageUrl = baseUrl + imageUrl;
+  function showLightbox(mediaImg,mediaVdeo, sortedData) {
+    const baseUrl = 'assets/photographers/';
+    
+    let fullMediaUrl;
+console.log("premier",mediaImg)
+console.log(mediaVdeo)
+
+
+if (mediaImg) {
+  fullMediaUrl = baseUrl + mediaImg;
+} else if (mediaVdeo) {
+  fullMediaUrl = baseUrl + mediaVdeo;
+} else {
+  console.error("Aucun média trouvé.");
+  return;
+}
+   
+    
+    
   
     // Create a lightbox element
     const lightbox = document.createElement('div');
@@ -255,33 +278,53 @@ async function getPhotographerById(id) {
     const prevButton = document.createElement('button');
     prevButton.classList.add('lightbox-button', 'prev-button');
     const prevImage = document.createElement('img');
-    prevImage.setAttribute('src', '/assets/photographers/arrow-left.png');
+    prevImage.setAttribute('src', 'assets/photographers/arrow-left.png');
     prevButton.appendChild(prevImage);
     lightbox.appendChild(prevButton);
   
     const nextButton = document.createElement('button');
     nextButton.classList.add('lightbox-button', 'next-button');
     const nextImage = document.createElement('img');
-    nextImage.setAttribute('src', '/assets/photographers/arrow-right.png');
+    nextImage.setAttribute('src', 'assets/photographers/arrow-right.png');
     nextButton.appendChild(nextImage);
     lightbox.appendChild(nextButton);
   
-    // Create the enlarged image in the lightbox
-    const enlargedImg = document.createElement('img');
-    enlargedImg.classList.add('enlarged-img');
-    enlargedImg.setAttribute('src', fullImageUrl);
-    lightbox.appendChild(enlargedImg);
+    const contentContainer = document.createElement(mediaImg ? 'img' : 'video');
+    contentContainer.setAttribute('src', fullMediaUrl);
+    contentContainer.classList.add(mediaImg ? 'enlarged-img' : 'lightbox-video');
+  
+    if (mediaVdeo) {
+      contentContainer.setAttribute('controls', true);
+    }
   
     // Create the close button (cross)
     const closeButton = document.createElement('button');
     closeButton.classList.add('lightbox-button', 'close-button');
     const closeImage = document.createElement('img');
-    closeImage.setAttribute('src', '/assets/photographers/close-button.png');
+    closeImage.setAttribute('src', 'assets/photographers/close-button.png');
     closeButton.appendChild(closeImage);
     lightbox.appendChild(closeButton);
   
+    lightbox.appendChild(contentContainer);
     // Add the lightbox to the page
     document.body.appendChild(lightbox);
+
+    const title = document.createElement('p');
+  title.classList.add('lightbox-title');
+
+  // Trouver l'indice de l'image actuelle dans les données triées
+  const currentIndexTitle = sortedData.findIndex((item) => item.image === mediaImg || item.video === mediaVdeo);
+  if (currentIndexTitle >= 0) {
+    // Utiliser l'indice pour obtenir le titre correspondant
+    title.textContent = sortedData[currentIndexTitle].title;
+  }
+
+  lightbox.appendChild(title);
+
+  //une fonction pour changer dynamiquement les titres de l'images lorsque l'on passe à la prev image ou next
+  function updateTitle() {
+    title.textContent = sortedData[currentIndex].title;
+  }
   
     // Variables to store the current and total image indices
     let currentIndex = 0;
@@ -299,8 +342,11 @@ async function getPhotographerById(id) {
       if (currentIndex >= totalImages) {
         currentIndex = 0;
       }
+      
+      
       const nextImageUrl = baseUrl + images[currentIndex].image;
-      enlargedImg.setAttribute('src', nextImageUrl);
+      contentContainer.setAttribute('src', nextImageUrl);
+      updateTitle()
     }
   
     // Function to show the previous image
@@ -309,8 +355,10 @@ async function getPhotographerById(id) {
       if (currentIndex < 0) {
         currentIndex = totalImages - 1;
       }
+      
       const prevImageUrl = baseUrl + images[currentIndex].image;
-      enlargedImg.setAttribute('src', prevImageUrl);
+      contentContainer.setAttribute('src', prevImageUrl);
+      updateTitle()
     }
   
     // Add click event handlers for the navigation buttons
@@ -321,10 +369,19 @@ async function getPhotographerById(id) {
     closeButton.addEventListener('click', function () {
       document.body.removeChild(lightbox);
     });
-  }
-  
-  
 
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'ArrowLeft') {
+        showPrevImage();
+      } else if (event.key === 'ArrowRight') {
+        showNextImage();
+      }else if (event.key === 'Escape') {
+        document.body.removeChild(lightbox);
+      }
+    });
+  }
+
+  
   
   async function init() {
     // Récupérer l'ID du photographe depuis les paramètres de recherche

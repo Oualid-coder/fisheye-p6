@@ -14,6 +14,12 @@
     order: 2;
 }
 
+.contact_button:hover,
+.contact_button:focus {
+    background-color: #DB8876;
+    color:black;
+}
+
 .contact_button {
     font-size: 20px;
     font-weight: bold;
@@ -83,4 +89,15 @@ form input {
     height: 68px;
     border: none;
     border-radius: 5px;
+}
+
+.lightbox-title{
+    position: absolute;
+    bottom: 2px;
+    left: 69px;
+    color: #901C1C;
+    font-size: 24px;
+    font-weight: 400;
+    word-wrap: break-word;
+    font-family: DM Sans;
 }

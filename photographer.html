@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <link href="https://fonts.googleapis.com/css?family=DM+Sans&display=swap" rel="stylesheet">
     <title>Fisheye - photographe </title>
+    <script src="scripts/utils/contactForm.js"></script>  
   </head>
   <body>
     <header>
@@ -28,7 +29,7 @@
           <img src="assets/icons/close.svg" onclick="closeModal()" />
         </header>
        
-        <form>
+  <form id="formulaire">
   <div>
     <label for="surname">Prénom</label>
     <input type="text" id="surname" name="surname" aria-label="Prénom" tabindex="1" />
@@ -45,10 +46,9 @@
     <label for="message">Votre Message:</label><br>
     <textarea id="message" name="message" rows="10" cols="100" aria-label="Votre Message" tabindex="4"></textarea><br>
   </div>
-  <button class="contact_button" tabindex="5">Envoyer</button>
-</form>
-			</div>
-     
+  <button  class="contact_button" tabindex="5">Envoyer</button>
+  </form>
+			</div>     
 		</div>
     <script src="scripts/factories/profile.js"></script>
     <script src="scripts/factories/photos.js"></script>
@@ -56,6 +56,6 @@
     <script src="scripts/factories/profilePhoto.js"></script>
     <script src="scripts/pages/photographer.js"></script>
     <script src="scripts/factories/price-likes.js"></script>
-    <script src="scripts/utils/contactForm.js"></script>  
+    
   </body>
 </html>
