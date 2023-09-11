@@ -20,7 +20,6 @@ async function displayData(photographerData) {
 
   const userIntroDOM = photographerInfo.getUserIntroDOM(); 
   const photo =userPhoto.getPhotoDOM();
-  
 
   // Afficher les informations du photographe dans votre page HTML
   header.appendChild(userIntroDOM);
@@ -39,61 +38,70 @@ async function tri(photographerData) {
   // Ajouter le menu déroulant à la sectionTri
   sectionTri.appendChild(selectBoxContainer);
 
+  // Récupérer la liste des médias
+  const mediaContainer = document.querySelector(".photograph-photos");
+  const mediaElements = Array.from(mediaContainer.children);
+
   // Écouter les changements de sélection du menu déroulant
-  const selectBox = selectBoxContainer.querySelector("select");
-  selectBox.addEventListener("change", () => {
-    const sortBy = selectBox.value;
+  const selectButton = selectBoxContainer.querySelector(".btn_drop");
 
-    let dataArray;
+  // Déclarer la variable dropdown en dehors de l'événement
+  const dropdown = selectBoxContainer.querySelector(".dropdown_content");
 
-    try {
-      // Vérifier si photographerData.media est déjà un tableau
-      if (Array.isArray(photographerData.media)) {
-        dataArray = photographerData.media;
-      } else if (typeof photographerData.media === "object") {
-        // Vérifier si photographerData.media est un objet
-        dataArray = Object.values(photographerData.media);
-      } else {
-        // Vérifier si photographerData.media est une chaîne de caractères JSON valide
-        dataArray = JSON.parse(photographerData.media);
-      }
+  selectButton.addEventListener("click", () => {
+    // Logique d'ouverture/fermeture du menu déroulant ici
+    const isExpanded = selectButton.getAttribute("aria-expanded") === "true" || false;
+    selectButton.setAttribute("aria-expanded", !isExpanded);
+    dropdown.classList.toggle("curtain_effect");
 
-      // Effectuer le tri des données
-      const sortedData = sortData(dataArray, sortBy);
-
-      // Afficher les données triées (par exemple, mettre à jour l'affichage des photos)
-      displayPhotoSorted(sortedData);
-    } catch (error) {
-      console.error("Erreur lors de l'analyse du JSON :", error);
-    }
+    const newAriaHiddenValue = dropdown.classList.contains("curtain_effect") ? "false" : "true";
+    dropdown.setAttribute("aria-hidden", newAriaHiddenValue);
   });
 
-  // Utiliser le tri par défaut (première valeur du menu déroulant)
-  const defaultSortBy = selectBox.value;
+  // Écouter les clics sur les options du menu déroulant pour effectuer le tri
+  const dropdownOptions = selectBoxContainer.querySelectorAll(".dropdown_content button");
 
-  try {
-    let dataArray;
+  dropdownOptions.forEach((optionButton) => {
+    optionButton.addEventListener("click", () => {
+      const selectedOption = optionButton.textContent;
 
-    // Vérifier si photographerData.media est déjà un tableau
-    if (Array.isArray(photographerData.media)) {
-      dataArray = photographerData.media;
-    } else if (typeof photographerData.media === "object") {
-      // Vérifier si photographerData.media est un objet
-      dataArray = Object.values(photographerData.media);
-    } else {
-      // Vérifier si photographerData.media est une chaîne de caractères JSON valide
-      dataArray = JSON.parse(photographerData.media);
-    }
+      // Effectuer le tri en fonction de l'option sélectionnée
+      let sortedData;
+      switch (selectedOption) {
+        case "Titre":
+          // Tri par titre
+          sortedData = sortData(photographerData.media, "title");
+          break;
+        case "Popularité":
+          // Tri par popularité
+          sortedData = sortData(photographerData.media, "popularity");
+          break;
+        case "Date":
+          // Tri par date
+          sortedData = sortData(photographerData.media, "date");
+          break;
+        default:
+          // Par défaut, trier par titre
+          sortedData = sortData(photographerData.media, "title");
+          break;
+      }
 
-    // Effectuer le tri des données
-    const sortedData = sortData(dataArray, defaultSortBy);
+      // Afficher les données triées
+      displayPhotoSorted(sortedData);
 
-    // Afficher les données triées 
-    displayPhotoSorted(sortedData);
-  } catch (error) {
-    console.error("Erreur lors de l'analyse du JSON :", error);
-  }
+      // Fermer le menu déroulant
+      selectButton.setAttribute("aria-expanded", "false");
+      selectButton.classList.remove("open");
+      // (Masquer le menu déroulant comme vous le faites actuellement)
+
+      // Mettre à jour le libellé du bouton avec l'option sélectionnée
+      document.querySelector("#current_filter").textContent = selectedOption;
+    });
+  });
 }
+
+
+
 
 
 
@@ -139,6 +147,14 @@ async function displayLikesAndPrices(photographerData) {
 
 }
 
+async function contactName(photographerData){
+  const nameContact=document.querySelector('.contact-me')
+const { name }=photographerData.photographer
+  nameContact.innerText="contactez moi " + name
+  
+}
+
+
 
 function incrementLikes(container, likesElements) {
   const likesCount = likesElements.innerText;
@@ -149,18 +165,18 @@ function incrementLikes(container, likesElements) {
       const hasLiked = container.dataset.hasLiked === 'true';
       if (!hasLiked) {
         likeCount++;
-        likesElements.innerText = likeCount;
-        // Définir la variable de contrôle pour indiquer que la photo a été likée
-        container.dataset.hasLiked = 'true';
-        // Désactiver le clic pour éviter de liker à nouveau
-        //container.removeEventListener('click', clickHandler);
       } else {
-        // La photo a déjà été likée, afficher un message ou effectuer une autre action appropriée
-        console.log("Vous avez déjà liké cette photo !");
+        likeCount--;
       }
+      likesElements.innerText = likeCount;
+
+      // Inverser l'état "hasLiked"
+      container.dataset.hasLiked = hasLiked ? 'false' : 'true';
     }
   }
 }
+
+
 
 
 async function displayPhoto(photographerData) {
@@ -194,9 +210,12 @@ async function displayPhoto(photographerData) {
     const likes = createPhotos.querySelector('.numbers');
 
     // Ajouter un gestionnaire d'événement de clic pour incrémenter les likes
-    const heart = createPhotos.querySelector('.heart');
+    const heartButtons = document.querySelector('.heart');
+    
+    let isLiked = false;
 
-    heart.addEventListener('click', function () {
+
+    heartButtons.addEventListener('click', function () {
       incrementLikes(heart, likes);
     });
   });
@@ -214,42 +233,49 @@ function displayPhotoSorted(sortedData) {
     const photoElement = photos(photo);
     const createPhotos = photoElement.getPhotoDOM();
     galleryContainer.appendChild(createPhotos);
-         // Ajouter un gestionnaire d'événement de clic pour chaque média individuel
-         const img = createPhotos.querySelector('img');
-         img.addEventListener('click', function () {
-           showLightbox(photo.image,photo.video,sortedData);
-         });          
-   
-           // Sélectionner l'élément pour afficher le nombre de likes
-       const likes = createPhotos.querySelector('.numbers');
-       
-   
-       // Ajouter un gestionnaire d'événement de clic pour incrémenter les likes
-       const heart = createPhotos.querySelector('.heart');
-      
-       heart.addEventListener('click', function () {
-        if (!heart.dataset.hasLiked) {
-          incrementLikes(heart, likes);
-          const totalLikesElement = document.querySelector('.likes-bottom-page');
-          const img = heart.querySelector('.blackheart');
-        
-          if (!img) {
-            const newImg = document.createElement('img');
-            newImg.classList.add('blackheart');
-            newImg.setAttribute('src', './assets/photographers/blackheart.png');
-            newImg.setAttribute('alt', 'Coeur noir');
-            const totalLikes = parseInt(totalLikesElement.textContent);
-            totalLikesElement.textContent = (totalLikes + 1).toString();
-            totalLikesElement.appendChild(newImg);
-          } else {
-            img.style.display = 'inline-block';
-          }
+    
+    // Sélectionner l'élément pour afficher le nombre de likes
+    const likes = createPhotos.querySelector('.numbers');
 
-          heart.dataset.hasLiked = 'true';
-        }
-     });
+    // Ajouter un gestionnaire d'événement de clic pour incrémenter les likes
+    const heart = createPhotos.querySelector('.heart');
+    
+    if (heart.dataset.hasLiked === 'true') {
+      // Assurez-vous que le bouton "coeur" est mis à jour visuellement
+      const img = heart.querySelector('.blackheart');
+      img.style.display = 'inline-block';
+    }
+
+    heart.addEventListener('click', function () {
+      incrementLikes(heart, likes); // Utilisez la fonction toggleLikes
+      const totalLikesElement = document.querySelector('.likes-bottom-page');
+      
+
+      if ( heart.dataset.hasLiked === 'true') {
+        const newImg = document.createElement('img');
+        newImg.classList.add('blackheart');
+        newImg.setAttribute('src', './assets/photographers/blackheart.png');
+        newImg.setAttribute('alt', 'Coeur noir');
+        const totalLikes = parseInt(totalLikesElement.textContent);
+        totalLikesElement.textContent = (totalLikes + 1).toString();
+        totalLikesElement.appendChild(newImg);
+      } else  {
+        const newImg = document.createElement('img');
+        newImg.classList.add('blackheart');
+        newImg.setAttribute('src', './assets/photographers/blackheart.png');
+        newImg.setAttribute('alt', 'Coeur noir');
+        const totalLikes = parseInt(totalLikesElement.textContent);
+        totalLikesElement.textContent = (totalLikes - 1).toString();
+        totalLikesElement.appendChild(newImg);
+        
+      }
+     
+    });
   });
 }
+
+
+
 
 
 function showLightbox(mediaImg, mediaVideo, sortedData) {
@@ -293,10 +319,13 @@ function showLightbox(mediaImg, mediaVideo, sortedData) {
     contentContainer.setAttribute('src', fullMediaUrl);
     contentContainer.classList.add('enlarged-img');
   } else if (mediaType === 'video') {
-    contentContainer = document.createElement('video');
-    contentContainer.setAttribute('src', fullMediaUrl);
-    contentContainer.classList.add('lightbox-video');
-    contentContainer.setAttribute('controls', true);
+    const videoContainer = document.createElement('div');
+    videoContainer.classList.add('video-container'); 
+    const videoElement = document.createElement('video');
+    videoElement.setAttribute('src', fullMediaUrl);
+    videoElement.setAttribute('controls', true); 
+    videoContainer.appendChild(videoElement);
+    contentContainer.appendChild(videoContainer);
   }
 
   const closeButton = document.createElement('button');
@@ -444,6 +473,7 @@ async function init() {
   displayPhoto(photographerData);
   displayLikesAndPrices(photographerData)
   tri(photographerData)
+  contactName(photographerData)
   
 }
 

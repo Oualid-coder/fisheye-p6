@@ -101,3 +101,15 @@ form input {
     word-wrap: break-word;
     font-family: DM Sans;
 }
+
+.lightbox-video{
+    max-width: 70%;
+    max-height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

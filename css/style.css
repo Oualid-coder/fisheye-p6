@@ -132,17 +132,7 @@ margin-bottom: 4px;
 
 /* lightbox */
 
-.lightbox {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+
   
 
   .lightbox img {
@@ -235,10 +225,6 @@ padding-bottom: 25px;
 color: #525252;
   }
 
-  .select-box-container{
-    background-color:  #DB8876;
-  }
-
   .likes-bottom-page{
 
     margin-left: 16px;
@@ -267,4 +253,118 @@ color: #525252;
     color: blue;
   }
 
+
+
+/* filtre */
+
+.main_content_filter {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  gap: 10px;
+}
+
+h2{
+  font-weight: 100;
+ 
+}
+
+.filter_section{
+  position: relative;
+  height: 100%;
+}
+
+.dropdown {
+  z-index: 10;
+  position: absolute;
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex; /* Utilisez Flexbox */
+  flex-direction: column; /* Alignez les éléments verticalement */
+  align-items: stretch; /* Étirez les éléments sur la colonne verticale */
+}
+
+.rotate{
   
+}
+
+.dropdown_content {
+  max-height: 0;
+  transition: max-height .1s ease-in-out;
+  list-style: none;
+}
+
+
+.dropdown_content li::before{
+  content: "";
+  
+  top: 0px;
+ 
+  width: 85%;
+  height: 1px;
+  
+}
+
+.btn_drop,
+.dropdown_content li button{
+  height: 50px;
+  padding: 15px;
+  background-color: #901C1C;
+  color: white;
+  
+}
+
+.btn_drop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 150px;
+  background-color: #901C1C;
+}
+
+.dropdown_content li {
+  position: relative;
+  width: 150px;
+  border-bottom: 1px solid #ddd; /* Ajoutez une ligne de séparation */
+  padding: 0; /* Supprimez la marge intérieure pour les boutons */
+}
+
+/* Retirez le padding des boutons pour les options de tri */
+.dropdown_content li button {
+  width: 100%;
+  text-align: left;
+  
+  background-color: #901C1C;
+  border: none; /* Retirez la bordure du bouton */
+  cursor: pointer; /* Curseur de type main */
+  padding-bottom: 2px;
+
+}
+
+.dropdown_content li button:hover,
+.dropdown_content li button:focus,
+.btn_drop:hover,
+.btn_drop:focus{
+  border: none;
+}
+
+.curtain_effect {
+  max-height: 170px;
+  margin-left: -40px;
+
+}
+
+.btn_drop.open .fa-chevron-up {
+  transform: rotate(180deg); /* Rotation de la flèche vers le haut */
+}
+
+
+.dropdown_content.open li {
+  border-bottom: 1px solid #ddd; /* Ligne de séparation entre les options */
+}
+
+.btn_drop.open {
+  background-color: #901C1C; /* Couleur de fond lorsque le menu est ouvert */
+}
+
+
