@@ -29,11 +29,17 @@ function triOption() {
   spanCurrentFilter.setAttribute('id', 'current_filter');
   spanCurrentFilter.textContent = 'Titre'; // Set the default value
   button.appendChild(spanCurrentFilter);
+ 
 
   const spanChevronUp = document.createElement('span');
-  spanChevronUp.classList.add('fa-solid', 'fa-chevron-up');
+  spanChevronUp.classList.add('fa-solid', 'fa-chevron-up','spanchevron');
   spanChevronUp.setAttribute('aria-hidden', 'true');
+  const imageChevronUp=document.createElement('img')
+  imageChevronUp.setAttribute('src','assets/photographers/arrow-up.png')
+  imageChevronUp.classList.add('chevronup','rotate')
+  spanChevronUp.appendChild(imageChevronUp)
   button.appendChild(spanChevronUp);
+  
 
   const ul = document.createElement('ul');
   ul.classList.add('dropdown_content');
@@ -63,9 +69,9 @@ function triOption() {
 }
 
 function openCloseDropdown() {
-  console.log("openCloseDropdown function called"); // Ajoutez ceci pour vérifier l'appel de la fonction
   const filterMenuButton = document.querySelector(".btn_drop");
   const filterButtons = document.querySelectorAll(".dropdown_content button");
+  const chevronIcon = filterMenuButton.querySelector(".chevronup img");
 
   if (!filterMenuButton || !filterButtons) {
     console.error("Les éléments DOM ne peuvent pas être trouvés.");
@@ -73,18 +79,28 @@ function openCloseDropdown() {
   }
 
   filterMenuButton.addEventListener("click", () => {
-    console.log("Filter menu button clicked"); // Ajoutez ceci pour vérifier le clic
+    // Ajoutez ou supprimez la classe "open" sur le bouton du menu
     filterMenuButton.classList.toggle("open");
+
+    if (chevronIcon) {
+      // Ajoutez ou supprimez la classe "rotate" pour faire tourner l'icône
+      
+    }
+    chevronIcon.classList.toggle("rotate");
+    // Affichez ou masquez les options du menu
+    const dropdownContent = document.querySelector(".dropdown_content");
+    dropdownContent.classList.toggle("open");
   });
 
   filterButtons.forEach(button => {
     button.addEventListener("click", () => {
-      console.log("Filter button clicked"); // Ajoutez ceci pour vérifier le clic
       const selectedOption = button.textContent;
       document.querySelector("#current_filter").textContent = selectedOption;
       filterMenuButton.classList.remove("open");
     });
   });
 }
+
+
 
 

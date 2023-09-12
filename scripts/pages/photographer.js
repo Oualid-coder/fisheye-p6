@@ -53,7 +53,12 @@ async function tri(photographerData) {
     const isExpanded = selectButton.getAttribute("aria-expanded") === "true" || false;
     selectButton.setAttribute("aria-expanded", !isExpanded);
     dropdown.classList.toggle("curtain_effect");
+    const chevronIcon = selectButton.querySelector(".chevronup");
 
+  if (chevronIcon) {
+    // Appliquez la rotation uniquement à l'icône de la flèche
+    chevronIcon.classList.toggle("rotate");
+  }
     const newAriaHiddenValue = dropdown.classList.contains("curtain_effect") ? "false" : "true";
     dropdown.setAttribute("aria-hidden", newAriaHiddenValue);
   });

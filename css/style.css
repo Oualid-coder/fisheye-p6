@@ -285,7 +285,7 @@ h2{
 }
 
 .rotate{
-  
+  transform: rotate(180deg);
 }
 
 .dropdown_content {
@@ -294,15 +294,21 @@ h2{
   list-style: none;
 }
 
+.spanchevron{
+  display: inline-block; 
+}
 
-.dropdown_content li::before{
+
+.dropdown_content li::before {
   content: "";
-  
-  top: 0px;
- 
-  width: 85%;
-  height: 1px;
-  
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85%; /* Largeur de la ligne centrée */
+  border-bottom-width: 0.5px; /* Réduisez la largeur de la bordure inférieure */
+  border-bottom-style: solid; /* Assurez-vous que la bordure est solide */
+  border-bottom-color: #ddd; /* Couleur de la bordure */
 }
 
 .btn_drop,
@@ -325,7 +331,6 @@ h2{
 .dropdown_content li {
   position: relative;
   width: 150px;
-  border-bottom: 1px solid #ddd; /* Ajoutez une ligne de séparation */
   padding: 0; /* Supprimez la marge intérieure pour les boutons */
 }
 
