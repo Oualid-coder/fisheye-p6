@@ -409,8 +409,6 @@ h2{
 
 .lightbox .prev-button img,
 .lightbox .next-button img {
-  width: 20px;
-  height: 20px;
   display: block;
   margin: 0 auto;
 }
