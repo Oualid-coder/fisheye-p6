@@ -85,7 +85,7 @@ margin-bottom: 4px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 70px;
-    margin-top: 100px;
+    margin-top: 160px;
     padding-left: 68px;
     padding-right: 88px;
 
@@ -131,13 +131,10 @@ margin-bottom: 4px;
 }
 
 /* lightbox */
-
-
-  
-
   .lightbox img {
     max-width: 90%;
     max-height: 90%;
+    object-fit: cover;
   }
 
 
@@ -168,24 +165,28 @@ margin-bottom: 4px;
     transform: translate(-50%, -50%);
     
   }
-  
+
+
   .prev-button {
-    /* ... styles spécifiques au bouton gauche ... */
-    order: 1; /* Placer le bouton gauche en premier dans l'ordre d'affichage */
+position: relative;
+left: 0px;
+    order: 1; 
     border: none;
     background: #E5E5E5;
+
   }
   
   .next-button {
-    /* ... styles spécifiques au bouton droit ... */
-    order: 3; /* Placer le bouton droit en dernier dans l'ordre d'affichage */
+   position: relative;
+   right: 0px;
+    order: 3; 
     border: none;
     background: #E5E5E5;
   }
   
   .enlarged-img {
-    /* ... styles spécifiques à l'image ... */
-    order: 2; /* Placer l'image au milieu de l'ordre d'affichage */
+   
+    order: 2; 
     border: none;
     background: #E5E5E5;
     width: 906px;
@@ -196,9 +197,8 @@ margin-bottom: 4px;
     position: absolute;
     border: none;
     background: #E5E5E5;
-    top: 10px; /* Ajustez la valeur en fonction de l'espace souhaité depuis le haut */
-    right: 10px; /* Ajustez la valeur en fonction de l'espace souhaité depuis la droite */
-    /* ... autres styles spécifiques au bouton de fermeture ... */
+    top: 10px; 
+    right: 10px; 
   }
 
   .container-info{
@@ -262,6 +262,7 @@ color: #525252;
   align-items: center;
   height: 50px;
   gap: 10px;
+  z-index: 0;
 }
 
 h2{
@@ -373,3 +374,43 @@ h2{
 }
 
 
+/**/
+
+/* Styles pour les icônes de flèche gauche et droite */
+.lightbox .media-container {
+  position: relative;
+}
+
+.lightbox video {
+  width: 100%;
+  height: auto;
+}
+
+.lightbox .prev-button,
+.lightbox .next-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  
+  border: none;
+  cursor: pointer;
+ 
+}
+
+.lightbox .prev-button {
+  left: 0;
+}
+
+.lightbox .next-button {
+  right: 0;
+}
+
+.lightbox .prev-button img,
+.lightbox .next-button img {
+  width: 20px;
+  height: 20px;
+  display: block;
+  margin: 0 auto;
+}

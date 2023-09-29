@@ -132,7 +132,7 @@ function sortData(data, sortBy) {
         return titleA.localeCompare(titleB);
       });
       break;
-    default:
+    default: 
       
       break;
   }
@@ -192,6 +192,9 @@ async function displayPhoto(photographerData) {
     const createPhotos = mediaElement.getPhotoDOM();
     mediaContainer.appendChild(createPhotos);
 
+    const sortedData = sortData(photographerData.media, "title");
+    displayPhotoSorted(sortedData);
+
     // Ajouter un gestionnaire d'événement de clic pour chaque média individuel
     createPhotos.addEventListener('click', function (e) {
       const target = e.target;
@@ -217,7 +220,7 @@ async function displayPhoto(photographerData) {
     // Ajouter un gestionnaire d'événement de clic pour incrémenter les likes
     const heartButtons = document.querySelector('.heart');
     
-    let isLiked = false;
+     
 
 
     heartButtons.addEventListener('click', function () {
@@ -238,6 +241,12 @@ function displayPhotoSorted(sortedData) {
     const photoElement = photos(photo);
     const createPhotos = photoElement.getPhotoDOM();
     galleryContainer.appendChild(createPhotos);
+
+           // Ajouter un gestionnaire d'événement de clic pour chaque média individuel
+           const img = createPhotos.querySelector('img');
+           img.addEventListener('click', function () {
+             showLightbox(photo.image,photo.video,sortedData);
+           });      
     
     // Sélectionner l'élément pour afficher le nombre de likes
     const likes = createPhotos.querySelector('.numbers');
@@ -460,6 +469,7 @@ function showLightbox(mediaImg, mediaVideo, sortedData) {
       document.body.removeChild(lightbox);
     }
   });
+  
 }
 
 
