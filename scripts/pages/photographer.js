@@ -195,21 +195,20 @@ async function displayPhoto(photographerData) {
     const sortedData = sortData(photographerData.media, "title");
     displayPhotoSorted(sortedData);
 
-    // Ajouter un gestionnaire d'événement de clic pour chaque média individuel
     createPhotos.addEventListener('click', function (e) {
       const target = e.target;
-
+    
       // Vérifier si l'élément cliqué est une image ou une vidéo
-      const isImage = target.tagName === 'IMG';
-      const isVideo = target.tagName === 'VIDEO';
-
+      const isImage = target.classList.contains('pictures');
+      const isVideo = target.classList.contains('video-container');
+    
       if (isImage || isVideo) {
         const mediaSrc = isImage ? target.getAttribute('src') : (isVideo ? target.getAttribute('src') : null);
         const mediaType = mediaSrc ? mediaSrc.split('.').pop().toLowerCase() : null;
-
+    
         const mediaImage = isImage ? (mediaType === 'mp4' ? null : mediaSrc) : null;
         const mediaVideo = isVideo ? (mediaType === 'mp4' ? mediaSrc : null) : null;
-
+    
         if (mediaVideo) {
           // Si c'est une vidéo, trouvez l'élément parent (article) de la vidéo
           const article = target.closest('article.article-video');
@@ -223,6 +222,7 @@ async function displayPhoto(photographerData) {
         }
       }
     });
+    
 
     // Sélectionner l'élément pour afficher le nombre de likes
     const likes = createPhotos.querySelector('.numbers');
@@ -230,7 +230,8 @@ async function displayPhoto(photographerData) {
     // Ajouter un gestionnaire d'événement de clic pour incrémenter les likes
     const heartButtons = document.querySelector('.heart');
 
-    heartButtons.addEventListener('click', function () {
+    heartButtons.addEventListener('click', function (e) {
+      e.stopPropagation();
       incrementLikes(heart, likes);
     });
   });
@@ -277,7 +278,8 @@ function displayPhotoSorted(sortedData) {
       img.style.display = 'inline-block';
     }
 
-    heart.addEventListener('click', function () {
+    heart.addEventListener('click', function (e) {
+      e.stopPropagation();
       incrementLikes(heart, likes); // Utilisez la fonction toggleLikes
       const totalLikesElement = document.querySelector('.likes-bottom-page');
       
