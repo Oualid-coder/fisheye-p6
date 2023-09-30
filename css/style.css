@@ -157,8 +157,8 @@ margin-bottom: 4px;
     align-items: center;
     justify-content: center;
     background-color: #E5E5E5;
-    width: 1050px;
-    height: 710px;
+    width: 900px;
+    height: 610px;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -189,8 +189,8 @@ left: 0px;
     order: 2; 
     border: none;
     background: #E5E5E5;
-    width: 906px;
-    height: 876px;
+    width: 776px;
+    height: 781px;
   }
 
   .close-button {

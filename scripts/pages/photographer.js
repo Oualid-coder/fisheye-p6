@@ -210,7 +210,17 @@ async function displayPhoto(photographerData) {
         const mediaImage = isImage ? (mediaType === 'mp4' ? null : mediaSrc) : null;
         const mediaVideo = isVideo ? (mediaType === 'mp4' ? mediaSrc : null) : null;
 
-        showLightbox(mediaImage, mediaVideo, photographerData.media);
+        if (mediaVideo) {
+          // Si c'est une vidéo, trouvez l'élément parent (article) de la vidéo
+          const article = target.closest('article.article-video');
+          if (article) {
+            // Ouvrez la lightbox avec la vidéo
+            showLightbox(null, mediaVideo, photographerData.media);
+          }
+        } else if (mediaImage) {
+          // Si c'est une image, ouvrez la lightbox avec l'image
+          showLightbox(mediaImage, null, photographerData.media);
+        }
       }
     });
 
@@ -219,15 +229,13 @@ async function displayPhoto(photographerData) {
 
     // Ajouter un gestionnaire d'événement de clic pour incrémenter les likes
     const heartButtons = document.querySelector('.heart');
-    
-     
-
 
     heartButtons.addEventListener('click', function () {
       incrementLikes(heart, likes);
     });
   });
 }
+
 
 
 
@@ -242,12 +250,21 @@ function displayPhotoSorted(sortedData) {
     const createPhotos = photoElement.getPhotoDOM();
     galleryContainer.appendChild(createPhotos);
 
-           // Ajouter un gestionnaire d'événement de clic pour chaque média individuel
-           const img = createPhotos.querySelector('img');
-           img.addEventListener('click', function () {
-             showLightbox(photo.image,photo.video,sortedData);
-           });      
-    
+
+          // Ajouter un gestionnaire d'événement de clic pour chaque média individuel
+    createPhotos.addEventListener('click', function () {
+      if (photo.video) {
+        // Si c'est une vidéo, trouvez l'élément parent (article) de la vidéo
+        const article = createPhotos.closest('article');
+        if (article && article.classList.contains('article-video')) {
+          // Ouvrez la lightbox avec la vidéo
+          showLightbox(null, photo.video, sortedData);
+        }
+      } else if (photo.image) {
+        // Si c'est une image, ouvrez la lightbox avec l'image
+        showLightbox(photo.image, null, sortedData);
+      }
+    });
     // Sélectionner l'élément pour afficher le nombre de likes
     const likes = createPhotos.querySelector('.numbers');
 
@@ -294,8 +311,8 @@ function displayPhotoSorted(sortedData) {
 
 function showLightbox(mediaImg, mediaVideo, sortedData) {
   const baseUrl = 'assets/photographers/';
-  let mediaType; // Cette variable va stocker le type de média (image ou vidéo)
-
+  
+  let mediaType = ''; // Initialisez mediaType à une chaîne vide
   let fullMediaUrl;
 
   if (mediaImg) {
@@ -333,11 +350,13 @@ function showLightbox(mediaImg, mediaVideo, sortedData) {
     contentContainer.setAttribute('src', fullMediaUrl);
     contentContainer.classList.add('enlarged-img');
   } else if (mediaType === 'video') {
+    contentContainer = document.createElement('div'); // Créez d'abord l'élément contentContainer
     const videoContainer = document.createElement('div');
     videoContainer.classList.add('video-container'); 
     const videoElement = document.createElement('video');
     videoElement.setAttribute('src', fullMediaUrl);
     videoElement.setAttribute('controls', true); 
+    videoElement.classList.add('lightbox-video'); 
     videoContainer.appendChild(videoElement);
     contentContainer.appendChild(videoContainer);
   }
@@ -411,7 +430,7 @@ function showLightbox(mediaImg, mediaVideo, sortedData) {
         contentContainer = document.createElement('video');
         contentContainer.setAttribute('src', nextMediaUrl);
         contentContainer.classList.add('lightbox-video');
-        contentContainer.setAttribute('controls', true);
+        contentContainer.setAttribute('controls', false);
       }
 
       lightbox.insertBefore(contentContainer, closeButton);

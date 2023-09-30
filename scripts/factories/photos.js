@@ -9,8 +9,8 @@ function photos(data) {
     if (video) {
       const videoElement = document.createElement('video');
       videoElement.setAttribute('src', `assets/photographers/${video}`);
-      videoElement.setAttribute('controls', true);
       videoElement.classList.add('video');
+      article.classList.add('article-video')
       article.appendChild(videoElement);
     } else {
       const img = document.createElement('img');
